@@ -60,7 +60,7 @@ trait DataParser {
   def parse(row:String, fileName : String)(implicit messages: Messages): Either[String, (Seq[String], Int)] = {
     Logger.debug("DataParser: Parse: About to parse row: " + row)
 
-    val xmlRow = Try(Option(XML.withSAXParser(secureSAXParser)loadString(row))).getOrElse(None)
+    val xmlRow: Option[Elem] = Timer.time("sax parser") { Try(Option(XML.withSAXParser(secureSAXParser).loadString(row))).getOrElse(None) }
     //    Logger.debug("DataParser: Parse: About to match xmlRow: " + xmlRow)
 
     xmlRow match {
@@ -111,96 +111,137 @@ trait DataParser {
 
 }
 
+object Timer {
+
+  val times = scala.collection.mutable.Map[String, List[Long]]()
+
+  def time[R](id: String)(block: => R): R = {
+    val t0 = System.nanoTime()
+    val result = block    // call-by-name
+    val t1 = System.nanoTime()
+    times.update(id, times.get(id).map((t1 - t0) :: _).getOrElse(List(t1 - t0)))
+    result
+  }
+
+  def print = {
+    val output = times.map { case (key, values) =>
+      s"$key:\n" +
+      s"\tavg: ${(values.sum / values.size) / 1000}ms\n" +
+      s"\ttotal time: ${values.sum / 1000}ms\n" +
+      s"\ttotal count: ${values.size}"
+    }
+
+    println(s"Execution times:\n${output.mkString("\n")}")
+  }
+}
+
 object DataGenerator extends DataGenerator
 
 trait DataGenerator extends DataParser with Metrics{
 
   def getErrors(iterator:Iterator[String], scheme:String, fileName : String)(implicit authContext: AuthContext, hc: HeaderCarrier, request: Request[_], messages: Messages) =
   {
-    var rowNum = 0
-    implicit var sheetName :String = ""
-    var sheetColSize = 0
+
+    import Timer._
+
     val schemeErrors: ListBuffer[SheetErrors] = ListBuffer()
-    var validator:DataValidator = ERSValidationConfigs.defValidator
-    def incRowNum() = rowNum =  rowNum + 1
 
-    var rowCount : Int = 0
-    var rowsWithData : Int = 0
+    time("total") {
+      var rowNum = 0
+      implicit var sheetName :String = ""
+      var sheetColSize = 0
 
-    val startTime = System.currentTimeMillis()
+      var validator:DataValidator = ERSValidationConfigs.defValidator
+      def incRowNum() = rowNum =  rowNum + 1
 
-    def checkForMissingHeaders(rowNum: Int, sheetName: String)(implicit messages: Messages) = {
-      if(rowNum > 0 && rowNum < 9) {
-        throw ERSFileProcessingException(
-          "ers.exceptions.dataParser.incorrectHeader",
-          Messages("ers.exceptions.dataParser.incorrectHeader", sheetName, fileName),
-          needsExtendedInstructions = true,
-          optionalParams = Seq(sheetName, fileName)
-        )
-      }
-    }
+      var rowCount : Int = 0
+      var rowsWithData : Int = 0
 
-    while(iterator.hasNext){
-      val row = iterator.next()
-      //Logger.debug(" Data before  parsing ---> " + row)
-      val rowData = parse(row, fileName)
-      Logger.debug(" parsed data ---> " + rowData + " -- cursor --> " + rowNum)
-      rowData.isLeft match {
-        case true => {
-          checkForMissingHeaders(rowNum, sheetName)
-          Logger.debug("data from the left --->" + rowData.left.get)
-          sheetName = identifyAndDefineSheet(rowData.left.get,scheme)
-          Logger.debug("Sheetname = " + sheetName + "******")
-          schemeErrors += SheetErrors(sheetName, ListBuffer())
-          Logger.debug("SchemeData = " + schemeErrors.size + "******")
-          rowNum = 1
-          validator = setValidator(sheetName)
+      val startTime = System.currentTimeMillis()
+
+      def checkForMissingHeaders(rowNum: Int, sheetName: String)(implicit messages: Messages) = {
+        if(rowNum > 0 && rowNum < 9) {
+          throw ERSFileProcessingException(
+            "ers.exceptions.dataParser.incorrectHeader",
+            Messages("ers.exceptions.dataParser.incorrectHeader", sheetName, fileName),
+            needsExtendedInstructions = true,
+            optionalParams = Seq(sheetName, fileName)
+          )
         }
-        case _ =>
-          for (i <- 1 to rowData.right.get._2) {
-            rowNum match {
-              case count if count < 9 => {
-                Logger.debug("GetData: incRowNum if count < 9: " + count + " RowNum: " + rowNum)
-                incRowNum()
-              }
-              case 9 => {
-                Logger.debug("GetData: incRowNum if  9: " + rowNum + "sheetColSize: " + sheetColSize)
-                Logger.debug("sheetName--->" + sheetName)
-                sheetColSize = validateHeaderRow(rowData.right.get._1, sheetName, scheme, fileName)
-                incRowNum()
-              }
-              case _ => {
-                val foundData = rowData.right.get._1
-                rowCount = rowData.right.get._1.size
+      }
 
-                val data = ParserUtil.formatDataToValidate(foundData, sheetName)
-                if (!isBlankRow(data)) {
-                  rowsWithData += 1
-                  ErsValidator.validateRow(validator)(data, rowNum) match {
-                    case Some(errors) if errors.nonEmpty => {
-                      Logger.debug("Error while Validating File + Formatting errors present " + errors.toString)
-                      schemeErrors.last.errors ++= errors
-                    }
-                    case _ => schemeErrors.last.errors
-                  }
-                }
-                incRowNum()
+      while(iterator.hasNext){
+        time("top level") {
+          val row = iterator.next()
+          //Logger.debug(" Data before  parsing ---> " + row)
+          val rowData = time("row.parse") { parse(row, fileName) }
+          Logger.debug(" parsed data ---> " + rowData + " -- cursor --> " + rowNum)
+          rowData.isLeft match {
+            case true => {
+              time("left row") {
+                checkForMissingHeaders(rowNum, sheetName)
+                Logger.debug("data from the left --->" + rowData.left.get)
+                sheetName = identifyAndDefineSheet(rowData.left.get,scheme)
+                Logger.debug("Sheetname = " + sheetName + "******")
+                schemeErrors += SheetErrors(sheetName, ListBuffer())
+                Logger.debug("SchemeData = " + schemeErrors.size + "******")
+                rowNum = 1
+                validator = setValidator(sheetName)
               }
             }
+            case _ =>
+              time("right row") {
+                for (i <- 1 to rowData.right.get._2) {
+                  rowNum match {
+                    case count if count < 9 => {
+                      Logger.debug("GetData: incRowNum if count < 9: " + count + " RowNum: " + rowNum)
+                      incRowNum()
+                    }
+                    case 9 => {
+                      Logger.debug("GetData: incRowNum if  9: " + rowNum + "sheetColSize: " + sheetColSize)
+                      Logger.debug("sheetName--->" + sheetName)
+                      sheetColSize = validateHeaderRow(rowData.right.get._1, sheetName, scheme, fileName)
+                      incRowNum()
+                    }
+                    case _ => {
+                      val foundData = rowData.right.get._1
+                      rowCount = rowData.right.get._1.size
+
+                      val data = ParserUtil.formatDataToValidate(foundData, sheetName)
+                      if (!isBlankRow(data)) {
+                        rowsWithData += 1
+                        ErsValidator.validateRow(validator)(data, rowNum) match {
+                          case Some(errors) if errors.nonEmpty => {
+                            Logger.debug("Error while Validating File + Formatting errors present " + errors.toString)
+                            schemeErrors.last.errors ++= errors
+                          }
+                          case _ => schemeErrors.last.errors
+                        }
+                      }
+                      incRowNum()
+                    }
+                  }
+                }
+              }
           }
+        }
+      }
+
+      time("clean up") {
+        checkForMissingHeaders(rowNum, sheetName)
+        if(rowsWithData == 0) {
+          throw ERSFileProcessingException(
+            "ers.exceptions.dataParser.noData",
+            Messages("ers.exceptions.dataParser.noData"),
+            needsExtendedInstructions = true)
+        }
+        deliverDataIteratorMetrics(startTime)
+        AuditEvents.numRowsInSchemeData(scheme, rowsWithData)(authContext,hc,request)
+        Logger.debug("The SchemeData that GetData finally returns: " + schemeErrors)
       }
     }
 
-    checkForMissingHeaders(rowNum, sheetName)
-    if(rowsWithData == 0) {
-      throw ERSFileProcessingException(
-        "ers.exceptions.dataParser.noData",
-        Messages("ers.exceptions.dataParser.noData"),
-        needsExtendedInstructions = true)
-    }
-    deliverDataIteratorMetrics(startTime)
-    AuditEvents.numRowsInSchemeData(scheme, rowsWithData)(authContext,hc,request)
-    Logger.debug("The SchemeData that GetData finally returns: " + schemeErrors)
+    print
     schemeErrors
   }
 

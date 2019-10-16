@@ -57,12 +57,7 @@ trait ProcessODSService {
 
         val valid = ParserUtil.isFileValid(errorList, "performODSUpload")
 
-        val result = for {
-          _ <- cache
-          v <- valid
-        } yield {
-          v
-        }
+        val result = cache.flatMap(_ => valid)
 
         result recover {
           case ex: Exception => Failure(ex)

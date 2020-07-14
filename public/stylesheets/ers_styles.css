@@ -50,7 +50,7 @@ article .help-notice {
 
 #file-name, #remove-file-link {padding:9px 6px 6px 6px; display:none;}
 
-#file-name, #input-file-name {white-space:pre;} 
+#file-name, #input-file-name {white-space:pre;}
 
 #remove-file-link, #file-header-bar {display: none;}
 
@@ -74,70 +74,19 @@ article .help-notice {
 #file-name {float:left; width:60%; overflow:hidden;}
 #remove-file-link-container {width:auto; float:none; overflow:hidden;}
 
-/*#remove-csv-file-link {padding:29px 0 0 6px;}*/
 #remove-csv-files-link-container {width:auto; float:none; max-width:13%;}
 
 #file-header-bar {background-color:#DEE0E2; margin-bottom:1em; padding:4px 0 2px 186px;}
 
 #page-header {padding-top:2em;}
 
-#progressbar{
-font-family: "nta",Arial,sans-serif;
-font-size: 27px;
-line-height: 1;
-font-weight: 400;
-text-transform: none;
-display: block;
-margin-bottom: 0.25em;
-text-shadow: none;
-color: #6F777B;}
-
-#check-file-button {clear:both; float:left; margin-bottom:2em;}
-
-#back {clear:both; float:left;}
-
-.success-banner {
-  background-color: #00703c;
-  color:#FFFFFF;
-  font-size: 24px;
-  padding: 2em 0px 1em;
-  text-align: center;
-  margin-top: 40px;
-}
-
 .transaction-banner--complete {
     background-color: #00703c;
 }
-.success-font {
-  font-size:36px;
-  margin-top:0;
-  margin-bottom: 12px;
-}
 
-.bottom-grey {clear: both;
-/*border-bottom: 1px solid #BFC1C3;*/
-padding-bottom:20px;}
-
-.form-field.error {
+.form-field--error {
     border-left: 5px solid #df3034;
-    padding-left: 15px;
-    margin-left: 0em;
-                   }
-
-/*#success-message h1 {margin-bottom:0;}*/
-#success-message P {margin-top:0;}
-
-/*****************************/
-/* HTML Error Styles        */
-/*****************************/
-
-article #html-error-report table td, article #html-error-report table th {background:none; padding:10px 20px 10px 0} 
-article #html-error-report table td, article #html-error-report table th {border:none;} 
-article #html-error-report table td, article #html-error-report table th {border-bottom: 1px solid #BFC1C3;} 
-#html-error-report .column, #html-error-report .row {width:10%} 
-#html-error-report .report-title {text-align:right; margin-top:0; margin-bottom:0;}
-#html-error-report #errors-by-sheet {margin-top:2em; margin-bottom:0;}
-#html-error-report .sheet-title {margin-top:1em; margin-bottom:0.25em;}
+}
 
 /*****************************/
 /* spinner                   */

@@ -37,7 +37,7 @@
 		</ul>
 	</div>
 	<div id="file-wrapper">
-		@helpers.form(action = routes.UploadController.uploadODSFile(param), 'id -> "upload-file-form", 'enctype -> "multipart/form-data") {
+		@helpers.form(action = routes.UploadController.uploadODSFile(param), 'id -> "upload-file-form", 'enctype -> "multipart/form-data", 'class -> "form-field-group") {
 			<div id="file-input" class="form-field">
 				<label for="input-file-name" class="form-label" id="input-file-name-label">@Html(Messages("ers_check_file.file_upload_label"))</label>
 				@if(flash.get("filetype-error").isDefined) {

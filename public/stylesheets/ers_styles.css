@@ -2,29 +2,7 @@
 /* ERS Global Styles         */
 /*****************************/
 
-@media screen and (min-width: 641px) {
-
-  .grid-layout__column--1-3 {
-    float: left;
-    width: 33.33333%;
-  }
-
-  .grid-layout__column--2-3 {
-    float: left;
-    width: 66.66667%;
-  }
-
-}
-
-#upload-file-form {clear:both;}
-
-.hidden {display:none;}
-
 .clear {clear:both;}
-
-div.grid-layout {
-    margin:0;
-}
 
 .visibility {
     display: none;
@@ -48,86 +26,10 @@ article .help-notice {
    background: url('../images/icon-important.png') no-repeat scroll 0px 0.5em transparent;
 }
 
-.panel-indent {margin-bottom: 20px; border-left: 10px solid #BFC1C3;}
-
-.button {
-    background-color: #00823B;
-    position: relative;
-    display: inline-block;
-    border: medium none;
-    border-radius: 0px;
-    box-shadow: 0px 2px 0px #003518;
-    font-size: 1em;
-    line-height: 1.25;
-    text-decoration: none;
-    cursor: pointer;
-    color: #FFF;
-    margin: 0px 15px 15px 0px;
-    padding: 0.52632em 0.78947em 0.26316em;
-    vertical-align: top;
-}
-
-
-.button-get-started {
-    font-family: "nta",Arial,sans-serif;
-    font-size: 24px;
-    line-height: 1.25;
-    text-transform: none;
-    font-weight: 700;
-    background-image: url('../images/icon-pointer.png');
-    background-repeat: no-repeat;
-    background-position: 100% 50%;
-    padding: 0.36842em 2.15789em 0.21053em 0.84211em;
-}
-
-.button:link, .button:hover, .button:focus, .button:visited {
-    color: #FFF;
-}
-
-.button:before {
-    content: "";
-    height: 110%;
-    width: 100%;
-    display: block;
-    background: none repeat scroll 0% 0% transparent;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-}
 
 .help-notice p.nodeco {font-weight:400; font-size:19px;}
 
 .related {border-top:10px solid #005ea5; margin:3em 0 0; right:1.75em; }
-
-.link-back::before {
-    border-bottom: 5px solid transparent;
-    border-right: 6px solid #0b0c0c;
-    border-top: 5px solid transparent;
-    content: "";
-    display: block;
-    height: 0;
-    left: 0;
-    margin-top: -6px;
-    position: absolute;
-    top: 50%;
-    width: 0;
-}
-
-.link-back:link, .link-back:visited, .link-back:hover, .link-back:active {
-    color: #0b0c0c;
-}
-
-.link-back {
-    border-bottom: 1px solid #0b0c0c;
-	display: inline-block;
-	font-family: "nta",Arial,sans-serif;
-	font-weight: 400;
-	margin-top: 15px;
-	padding-left: 14px;
-	position: relative;
-	text-decoration: none;
-	text-transform: none;
-}
 
 /*****************************/
 /* Check file styles         */
@@ -237,10 +139,6 @@ article #html-error-report table td, article #html-error-report table th {border
 #html-error-report #errors-by-sheet {margin-top:2em; margin-bottom:0;}
 #html-error-report .sheet-title {margin-top:1em; margin-bottom:0.25em;}
 
-.error-table th, .error-table td {
-    font-size: 19px;
-    line-height: 1.31579;
-}
 /*****************************/
 /* spinner                   */
 /*****************************/
@@ -257,19 +155,6 @@ article #html-error-report table td, article #html-error-report table th {border
 
 .error-summary-heading {
     margin-top:0;
-}
- /*
-#errors {
-   width:60%;
-}
-
-.heading-xlarge {
-    width:120%;
-}
-*/
-
-.title-with-error {
-    margin-bottom:0;
 }
 
 #errors:focus, #fileToUpload:focus {outline: 3px solid #ffbf47;}

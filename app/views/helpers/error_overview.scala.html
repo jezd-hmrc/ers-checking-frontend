@@ -16,9 +16,9 @@
 
 @(form: Option[String], errorLink: String, OptionalErrMsg:Option[String] = None)(implicit messages: Messages)
 
-        <div id="errors" class="validation-summary" role="group" aria-labelledby="summary-heading" tabindex="-1">
-            <h1 id="summary-heading" class="heading-medium error-summary-heading">@Messages("validation.summary.heading")</h1>
-            <ul>
+        <div id="errors" class="flash error-summary error-summary--show" role="group" aria-labelledby="summary-heading" tabindex="-1">
+            <h1 id="error-summary-heading" class="heading-medium error-summary-heading">@Messages("validation.summary.heading")</h1>
+            <ul class="error-summary-list">
 
                 <li class="validation-summary-message" id='Error'>
                     <a href='#@errorLink' data-focuses='@errorLink'>

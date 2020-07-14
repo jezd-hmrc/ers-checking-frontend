@@ -29,15 +29,15 @@
 		@if(flash.get("check-file-type-not-selected-error").isDefined) {
 		@error_overview(flash.get("check-file-type-not-selected-error"), "error-summary")
 		}
-	<div class="@{if(flash.get("check-file-type-not-selected-error").isDefined) {"form-field error"}}">
+	<div class="@{if(flash.get("check-file-type-not-selected-error").isDefined) {"form-field form-field--error"}}">
 		@header(Messages("ers_check_file_type.title"))
 		@helpers.form(action = routes.CheckingServiceController.checkFileTypeSelected()) {
-			<fieldset>
-				<legend class="title-with-error">
+			<fieldset class="form-field-group">
+				<legend>
 					<span class="visuallyhidden">@Html(Messages("ers_check_file_type.title"))</span>
 				</legend>
 				@if(flash.get("check-file-type-not-selected-error").isDefined) {
-				<div aria-labelledby="error-heading" class="validation-message" id="error-summary" role="alert" tabindex="-1">
+				<div aria-labelledby="error-heading" class="error-message" id="error-summary" role="alert" tabindex="-1">
 					<span id="error-heading">@flash.get("check-file-type-not-selected-error")</span>
 				</div>
 				}

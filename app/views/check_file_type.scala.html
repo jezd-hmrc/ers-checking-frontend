@@ -20,15 +20,18 @@
 @import views.html.templates._
 @import utils.PageBuilder._
 @import views.html.helpers.error_overview
+@import uk.gov.hmrc.play.views.html.helpers
 @ers_main(title = Messages("ers.file_type.page_title")) {
 
 
 		<p class="font-xsmall"><a href="@routes.CheckingServiceController.schemeTypePage()" class="link-back">@Html(Messages("ers.back"))</a></p>
-		@header(Messages("ers_check_file_type.title"))
+
 		@if(flash.get("check-file-type-not-selected-error").isDefined) {
 		@error_overview(flash.get("check-file-type-not-selected-error"), "error-summary")
 		}
-		@uk.gov.hmrc.play.views.html.helpers.form(action = routes.CheckingServiceController.checkFileTypeSelected()) {
+	<div class="@{if(flash.get("check-file-type-not-selected-error").isDefined) {"form-field error"}}">
+		@header(Messages("ers_check_file_type.title"))
+		@helpers.form(action = routes.CheckingServiceController.checkFileTypeSelected()) {
 			<fieldset>
 				<legend class="title-with-error">
 					<span class="visuallyhidden">@Html(Messages("ers_check_file_type.title"))</span>
@@ -38,17 +41,16 @@
 					<span id="error-heading">@flash.get("check-file-type-not-selected-error")</span>
 				</div>
 				}
-				<div class="form-field @if(flash.get("check-file-type-not-selected-error").isDefined) {error}">
-					<label for="csv" class="block-label @(if(checkFileType == OPTION_CSV) "selected")">
-						<input id="csv" type="radio" name="checkFileType" value=@OPTION_CSV @(if(checkFileType == OPTION_CSV) "checked" else "")>
-						@Html(Messages("ers_check_file_type.option_1"))<br>
-					</label>
-					<label for="ods" class="block-label @(if(checkFileType == OPTION_ODS) "selected")">
-						<input id="ods" type="radio" name="checkFileType" value=@OPTION_ODS @(if(checkFileType == OPTION_ODS) "checked" else "")>
-						@Html(Messages("ers_check_file_type.option_2"))<br>
-					</label>
+				<div class="form-field form-field--submit">
+					@helpers.input_radio_group(CSformMappings.checkFileTypeForm("checkFileType"), Seq(
+						("csv", Messages("ers_check_file_type.option_1")),
+						("ods", Messages("ers_check_file_type.option_2"))
+					))
 				</div>
 			</fieldset>
-			<input role="button" id="continue" class="button" type="submit" value="@Html(Messages("ers.continue"))">
+		</div>
+			<div class="form-field form-field--submit">
+				<input role="button" id="continue" class="button" type="submit" value="@Html(Messages("ers.continue"))">
+			</div>
 			}
 }

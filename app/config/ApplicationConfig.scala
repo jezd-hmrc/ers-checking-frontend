@@ -34,6 +34,7 @@ trait ApplicationConfig {
   val ggSignInUrl: String
 
   val languageTranslationEnabled: Boolean
+  val reportAProblemNonJSUrl: String
   def languageMap: Map[String, Lang]
   def routeToSwitchLanguage: String => Call
   def reportAProblemPartialUrl: String
@@ -67,7 +68,8 @@ class ApplicationConfigImpl extends ApplicationConfig with ServicesConfig {
 
   def routeToSwitchLanguage = (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
 
-  private lazy val _reportAProblemPartialUrl = s"$contactHost/contact/problem_reports?secure=false"
+  private lazy val _reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?secure=false"
+  override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?secure=false"
   override def reportAProblemPartialUrl: String = _reportAProblemPartialUrl
 }
 

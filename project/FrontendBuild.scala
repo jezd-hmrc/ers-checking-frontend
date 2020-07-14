@@ -10,7 +10,7 @@ private object AppDependencies {
   import play.sbt.PlayImport._
 
 
-  private val frontendBootstrapVersion = "12.8.0"
+  private val frontendBootstrapVersion = "12.9.0"
   private val httpCachingVersion = "8.0.0"
   private val playPartialVersion = "6.3.0"
 
@@ -20,11 +20,11 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingVersion,
     "uk.gov.hmrc" %% "play-breadcrumb" % "1.0.0",
-    "uk.gov.hmrc" %% "play-language" % "4.1.0",
+    "uk.gov.hmrc" %% "play-language" % "4.3.0-play-25",
     "net.sourceforge.htmlcleaner" % "htmlcleaner" % "2.22",
     "commons-io" % "commons-io" % "2.6",
     "uk.gov.hmrc" %% "tabular-data-validator" % "1.0.0",
-    "uk.gov.hmrc" %% "auth-client" % "2.33.0-play-25"
+    "uk.gov.hmrc" %% "auth-client" % "2.35.0-play-25"
   )
 
   trait TestDependencies {

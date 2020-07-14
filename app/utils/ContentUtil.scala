@@ -23,11 +23,11 @@ trait ContentUtil {
 
   def getSchemeName(schemeType: String)(implicit messages: Messages) : (String,String) = {
     schemeType match {
-      case "1" => (Messages("ers_pdf_error_report.csop"),"CSOP")
-      case "2" => (Messages("ers_pdf_error_report.emi"),"EMI")
-      case "4" => (Messages("ers_pdf_error_report.saye"),"SAYE")
-      case "5" => (Messages("ers_pdf_error_report.sip"),"SIP")
-      case "3" => (Messages("ers_pdf_error_report.other"),"OTHER")
+      case "csop" => (Messages("ers_pdf_error_report.csop"),"CSOP")
+      case "emi" => (Messages("ers_pdf_error_report.emi"),"EMI")
+      case "saye" => (Messages("ers_pdf_error_report.saye"),"SAYE")
+      case "sip" => (Messages("ers_pdf_error_report.sip"),"SIP")
+      case "other" => (Messages("ers_pdf_error_report.other"),"OTHER")
       case _ => ("","")
     }
   }

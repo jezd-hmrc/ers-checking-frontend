@@ -29,7 +29,6 @@
 
 @ers_main(title = Messages("ers.upload_csv.page_title"), scripts) {
 
-	<div id="file-wrapper">
 		<p class="font-xsmall"><a href="@routes.CheckingServiceController.checkFileTypePage()" class="link-back">@Html(Messages("ers.back"))</a></p>
 		@header(Messages("ers_check_csv_file.title"))
 		<div id="errors" class="validation-summary visibility" role="group" aria-labelledby="error-summary-heading" tabindex="-1">
@@ -42,7 +41,7 @@
 		</div>
 		@helpers.form(action = routes.UploadController.uploadCSVFile(scheme), 'id -> "upload-file-form", 'enctype -> "multipart/form-data") {
 			@for(a <- 0 to getNumberOfBrowseButtons(scheme)-1) {
-				<div class="form-field">
+				<div class="form-field form-field--submit">
 					<label class="input-csv-file-name-heading" for="fileUpload[@a]">@getPageElement(scheme,PAGE_CHECK_CSV_FILE,"file"+a)</label>
 					<input id="fileUpload[@a]" class="input-csv-file-name" type="file" name="fileUpload[@a]" accept=".csv" size="40"/>
 				</div>
@@ -52,11 +51,9 @@
 				@flash.get("filetype-error")
 				</div>
 			}
-			<!--<div id="remove-csv-files-link-container"><a href="@routes.CheckingServiceController.checkCSVFilePage()" id="remove-csv-file-link">@Html(Messages("ers_check_csv_file.clear_all_link"))</a></div>-->
-			<div id="csv-files-button">
+			<div id="csv-files-button" class="form-field form-field--submit">
 				<button role="button" id="check-file-button" class="button" type="submit" value="@Html(Messages("ers_check_csv_file.check_file_button"))">@Html(Messages("ers_check_csv_file.check_file_button"))</button>
 				@spinner()
 			</div>
 		}
-	</div>
 }

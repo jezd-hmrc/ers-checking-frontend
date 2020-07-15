@@ -161,7 +161,7 @@ class DataGeneratorSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaF
     "get an exception if ods file doesn't contain any data" in {
       object dataGenObj extends DataGenerator
       val result = intercept[ERSFileProcessingException] {
-        dataGenObj.getErrors(XMLTestData.getCSOPWithoutData,"1","CSOP.ods")(hc = HeaderCarrier(),Fixtures.buildEmpRefRequestWithSessionId("GET"), implicitly[Messages])
+        dataGenObj.getErrors(XMLTestData.getCSOPWithoutData,"csop","CSOP.ods")(hc = HeaderCarrier(),Fixtures.buildEmpRefRequestWithSessionId("GET"), implicitly[Messages])
       }
       result.message mustBe "ers.exceptions.dataParser.noData"
       result.optionalParams mustBe Seq.empty[String]

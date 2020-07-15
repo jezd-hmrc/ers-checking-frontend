@@ -179,8 +179,8 @@ class CheckingServiceControllerTest extends UnitSpec with OneAppPerSuite with Mo
       val result = controllerUnderTest.showCheckFileTypePage(Fixtures.buildFakeRequestWithSessionId("GET"), hc)
       status(result) shouldBe Status.OK
       val document = Jsoup.parse(contentAsString(result))
-      document.select("input[id=csv]").hasAttr("checked") shouldEqual true
-      document.select("input[id=ods]").hasAttr("checked") shouldEqual false
+      document.select("input[id=checkFileType-csv]").hasAttr("checked") shouldEqual true
+      document.select("input[id=checkFileType-ods]").hasAttr("checked") shouldEqual false
     }
 
     "give a status OK if fetch fails then show check file type page with nothing selected" in {
@@ -188,8 +188,8 @@ class CheckingServiceControllerTest extends UnitSpec with OneAppPerSuite with Mo
       val result = controllerUnderTest.showCheckFileTypePage(Fixtures.buildFakeRequestWithSessionId("GET"), hc)
       status(result) shouldBe Status.OK
       val document = Jsoup.parse(contentAsString(result))
-      document.select("input[id=csv]").hasAttr("checked") shouldEqual false
-      document.select("input[id=ods]").hasAttr("checked") shouldEqual false
+      document.select("input[id=checkFileType-csv]").hasAttr("checked") shouldEqual false
+      document.select("input[id=checkFileType-ods]").hasAttr("checked") shouldEqual false
     }
 
   }

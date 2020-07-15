@@ -42,7 +42,7 @@
 				</div>
 				}
 				<div class="form-field form-field--submit">
-					@helpers.input_radio_group(CSformMappings.checkFileTypeForm("checkFileType"), Seq(
+					@helpers.input_radio_group(CSformMappings.checkFileTypeForm.fill(CS_checkFileType(checkFileType))("checkFileType"), Seq(
 						("csv", Messages("ers_check_file_type.option_1")),
 						("ods", Messages("ers_check_file_type.option_2"))
 					))
